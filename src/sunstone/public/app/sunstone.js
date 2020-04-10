@@ -40,6 +40,7 @@ define(function(require) {
     "groups-tab",
     "vdcs-tab",
     "acls-tab",
+    "hypercx-tab",
     "templates-top-tab",
     "templates-tab",
     "oneflow-templates-tab",

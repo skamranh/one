@@ -126,6 +126,7 @@ require.config({
         "tabs/groups-tab",
         "tabs/vdcs-tab",
         "tabs/acls-tab",
+        "tabs/hypercx-tab",
         "tabs/templates-top-tab",
         "tabs/templates-tab",
         "tabs/oneflow-templates-tab",

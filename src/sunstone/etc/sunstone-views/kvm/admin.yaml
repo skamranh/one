@@ -35,6 +35,7 @@ enabled_tabs:
     - groups-tab
     - vdcs-tab
     - acls-tab
+    - hypercx-tab
     - settings-tab
     - support-tab
     - upgrade-top-tab
@@ -924,3 +925,6 @@ tabs:
            VMGroup.chgrp: true
            VMGroup.lockU: true
            VMGroup.unlock: true
+    hypercx-tab:
+        panel_tabs:
+        actions:
