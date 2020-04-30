@@ -110,6 +110,7 @@ require "sunstone_2f_auth"
 require 'CloudAuth'
 require 'SunstoneServer'
 require 'SunstoneViews'
+require 'hypercx_vault'
 
 ##############################################################################
 # Configuration
@@ -473,7 +474,7 @@ before do
     @request_body = request.body.read
     request.body.rewind
 
-    unless %w(/ /login /vnc /spice /version).include?(request.path)
+    unless %w(/ /login /vnc /spice /version /hypercx).include?(request.path)
         halt [401, "csrftoken"] unless authorized? && valid_csrftoken?
     end
 
@@ -651,6 +652,11 @@ get '/version' do
     [200, version.to_json]
 end
 
+get '/hypercx' do
+    vault = Hypercx_Vault.new
+    [200, vault.getAllApps.to_json]
+end
+    
 ##############################################################################
 # Login
 ##############################################################################
