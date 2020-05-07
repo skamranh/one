@@ -9,14 +9,14 @@ enabled_tabs:
     - dashboard-tab
     - instances-top-tab
     - vms-tab
-      #- oneflow-services-tab
+    - oneflow-services-tab
     - vrouters-tab
     - templates-top-tab
     - templates-tab
-      #- oneflow-templates-tab
+    - oneflow-templates-tab
     - vrouter-templates-tab
     - storage-top-tab
-      #- datastores-tab
+    #- datastores-tab
     - images-tab
     #- files-tab
     #- marketplaces-tab
