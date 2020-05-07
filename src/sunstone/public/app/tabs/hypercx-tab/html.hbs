@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="large-12 columns">
+    <table  style="text-align:left" class="provision_vms_table dataTable no-footer" role="grid">
+        <div class="provision_vms_ul large-up-2 medium-up-2 small-up-1">
+            <tr>
+                <th>Backup VM Name</th>
+                <th>Backup Date</th>
+                <th>Status</th>
+                <th>Marketplace ID</th>
+            </tr>
+            {{#each table_dat}}
+                <tr>
+                    <td><a href="/#vms-tab/{{VMID}}">{{NAME}}</a></td>
+                    <td>{{DATE}}</td>
+                    <td>{{STATUS}}</td>
+                    <td><a href="/#marketplaceapps-tab/{{MPID}}">{{MPID}}</a></td>
+                </tr>
+            {{/each}}
+        </div>
+    </table>
+</div>

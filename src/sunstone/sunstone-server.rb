@@ -110,7 +110,6 @@ require "sunstone_2f_auth"
 require 'CloudAuth'
 require 'SunstoneServer'
 require 'SunstoneViews'
-require 'hypercx_vault'
 
 ##############################################################################
 # Configuration
@@ -650,11 +649,6 @@ get '/version' do
     end
 
     [200, version.to_json]
-end
-
-get '/hypercx' do
-    vault = Hypercx_Vault.new
-    [200, vault.getAllApps.to_json]
 end
     
 ##############################################################################
