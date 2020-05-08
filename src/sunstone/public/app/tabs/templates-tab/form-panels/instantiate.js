@@ -522,10 +522,12 @@ define(function(require) {
           VMGroupSection.insert(template_json,
             $(".vmgroupContext"+ template_json.VMTEMPLATE.ID, context));
 
+          if (Config.isFeatureEnabled("vcenter_vm_folder")){
           vcenterVMFolderContext = $(".vcenterVMFolderContext"  + template_json.VMTEMPLATE.ID, context);
           VcenterVMFolder.setup(vcenterVMFolderContext);
           VcenterVMFolder.fill(vcenterVMFolderContext, template_json.VMTEMPLATE);
-
+          }
+          
           var inputs_div = $(".template_user_inputs" + template_json.VMTEMPLATE.ID, context);
 
           UserInputs.vmTemplateInsert(
