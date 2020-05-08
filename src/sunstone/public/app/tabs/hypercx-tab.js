@@ -1,16 +1,6 @@
 
 define(function(require) {
 
-    var Handlebars = require('hbs/handlebars');
-    var humanizeTime = function(seconds) {
-    if (seconds == undefined || seconds == ""){
-      return "-";
-    }
-    return new Date(seconds * 1000).toLocaleDateString("en-US")
-    };
-
-    Handlebars.registerHelper('prettyTime', humanizeTime);
-
     var TemplatePool = require('hbs!./hypercx-tab/html');
     console.log(TemplatePool());
     var _table_dat;
