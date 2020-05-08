@@ -12,6 +12,7 @@ class HypercxVault
 
     def getAllApps
         self.refresh
+        self.backups_sort
         return @apps
     end
 
@@ -34,7 +35,7 @@ class HypercxVault
                     if(++current_read >= @read_lines)
                         current_read += 1
                         if val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOEOB'
-                            @apps[val.split("!")[2].split(" ")[1].split("_").last] = val.split("!")[2].split(" ")[1].split("_")[-2]  
+                            @apps.push(Hash["NAME" => self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0]) , 'STATUS' => 'FAILED', 'DISK' => val.split("!")[2].split(" ")[1].split("_")[1], 'MPID'=>  "-",'DATE' => val.split("!")[2].split(" ")[1].split("_").last, "VMID" => val.split("!")[2].split(" ")[1].split("_")[0]])
                         end
                     end
                 end
@@ -43,11 +44,8 @@ class HypercxVault
 
             end
         end
-        @apps.each do |x, app|
-            if app["STATUS"] == "SUCCESS"
-                @app.pop(x)
-            end
-        end
+        @apps.delete_if{|x| x["STATUS"] == "SUCCESS"}
+        
         @client = Client.new
         mpapppool = MarketPlaceAppPool.new(@client, -1)
         rc = mpapppool.info
@@ -55,9 +53,24 @@ class HypercxVault
             mp_id = YAML::load_file(CONFIG_FILE_PATH)['marketplace']['id']
             mpapppool.each do |mpapp|
                 if mpapp.to_hash && mpapp.to_hash['MARKETPLACEAPP']['MARKETPLACE_ID'].to_i == mp_id
-                    @apps.push(Hash["NAME" => self.get_vm_name(mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID']) , 'STATUS' => 'SUCCESS', 'DISK' => mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID'].split("_")[1], 'MPID'=>  mpapp.to_hash['MARKETPLACEAPP']["ID"],'DATE' => DateTime.strptime(mpapp.to_hash['MARKETPLACEAPP']["REGTIME"], "%s").strftime("%e/%_m/%Y %H:%M:%S"),"VMID" => mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID'].split("_")[0]])            
+                    @apps.push(Hash["NAME" => self.get_vm_name(mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID']) , 'STATUS' => 'SUCCESS', 'DISK' => mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID'].split("_")[1], 'MPID'=>  mpapp.to_hash['MARKETPLACEAPP']["ID"],'DATE' => mpapp.to_hash['MARKETPLACEAPP']["REGTIME"],"VMID" => mpapp.to_hash['MARKETPLACEAPP']["TEMPLATE"]['IMPORT_ID'].split("_")[0]])            
                 end
             end
         end
     end
+
+    def backups_sort()
+        return @apps if @apps.size <= 1
+        swap = true
+          while swap
+            swap = false
+            (@apps.length - 1).times do |x|
+              if @apps[x]['DATE'].to_i < @apps[x+1]['DATE'].to_i
+                @apps[x], @apps[x+1] = @apps[x+1], @apps[x]
+                swap = true
+              end
+            end
+          end
+        @apps
+      end
 end

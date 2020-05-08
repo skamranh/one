@@ -1,6 +1,16 @@
 
 define(function(require) {
 
+    var Handlebars = require('hbs/handlebars');
+    var humanizeTime = function(seconds) {
+    if (seconds == undefined || seconds == ""){
+      return "-";
+    }
+    return new Date(seconds * 1000).toLocaleDateString("en-US")
+    };
+
+    Handlebars.registerHelper('prettyTime', humanizeTime);
+
     var TemplatePool = require('hbs!./hypercx-tab/html');
     console.log(TemplatePool());
     var _table_dat;
@@ -12,9 +22,7 @@ define(function(require) {
                           _table_dat = data;
                   }
               });
-    console.log(TemplatePool({
-            "table_dat": _table_dat
-        }));
+    console.log(_table_dat);
     var Tab = {
         tabId: TAB_ID,
         title: 'HyperCX Services',
