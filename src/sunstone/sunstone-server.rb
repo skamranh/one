@@ -473,7 +473,7 @@ before do
     @request_body = request.body.read
     request.body.rewind
 
-    unless %w(/ /login /vnc /spice /version /hypercx).include?(request.path)
+    unless %w(/ /login /vnc /spice /version).include?(request.path)
         halt [401, "csrftoken"] unless authorized? && valid_csrftoken?
     end
 

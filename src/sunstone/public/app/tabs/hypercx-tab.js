@@ -1,18 +1,21 @@
 
 define(function(require) {
 
+    var OpenNebulaHelper = require("opennebula");
+
     var TemplatePool = require('hbs!./hypercx-tab/html');
-    console.log(TemplatePool());
     var _table_dat;
     TAB_ID = 'hypercx-tab';
-    $.ajax('/hypercx',
-              {            
+    $.ajax(
+              {
+                  url: "/hypercx/vault",
+                  type: "GET",
+                  dataType: "json",   
                   async: false,
                   success: function (data, status, xhr) {
                           _table_dat = data;
                   }
               });
-    console.log(_table_dat);
     var Tab = {
         tabId: TAB_ID,
         title: 'HyperCX Services',
