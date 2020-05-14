@@ -22,21 +22,22 @@ define(function(require) {
             "bSortClasses" : false,
             "bDeferRender": true,
             "aoColumnDefs": [
-                { "bSortable": false, "aTargets": ["check",2,3,4] },
+                { "bSortable": false, "aTargets": ["check",2,3,4,5] },
                 {"sWidth": "35px", "aTargets": [0]},
                 {"bVisible": true, "aTargets": SunstoneConfig.tabTableColumns(TAB_NAME)},
                 {"bVisible": false, "aTargets": ['_all']},
-                {"sType": "num", "aTargets": [1]}
+                {"sType": "num", "aTargets": [2]}
             ]
         };
         
     this.totalBups = 0;    
     
     this.columns = [
-        Locale.tr("VM Name"),
-        Locale.tr("Backup Date"),
-        Locale.tr("Status"),
-        Locale.tr("Marketplace ID")
+        "VM Name",
+        "VM ID",
+        "Backup Date",
+        "Status",
+        "Marketplace ID"
       ];
     
     this.selectOptions = {
@@ -64,12 +65,13 @@ define(function(require) {
         return [
             '<input class="check_item" type="checkbox" '+
                                 'style="vertical-align: inherit;" id="'+this.resource.toLowerCase()+'_' +
-                                 element.MP_ID + '" name="selected_items" value="' +
-                                 element.MP_ID + '"/>',
-            element_json.VM_ID,
+                                 element_json.MPID + '" name="selected_items" value="' +
+                                 element_json.MPID + '"/>',
+            element_json.NAME,
+            element_json.VMID,
             element_json.DATE,
             element_json.STATUS,
-            element_json.MP_ID,
+            element_json.MPID,
             element_json
           ];
     }

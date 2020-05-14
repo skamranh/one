@@ -6,7 +6,7 @@ define(function(require) {
     var Actions = require('./hypercx-tab/action');
     //var TemplatePool = require('hbs!./hypercx-tab/html');
     var Table = require('./hypercx-tab/datatable');
-    var DATATABLE_ID = "dataTableVault";
+    var DATATABLE_ID = "Vault";
     
     var _dialogs = [
     ];
@@ -16,14 +16,13 @@ define(function(require) {
     
     var Tab = {
         tabId: TAB_ID,
-        title: "HyperCX Vault Backups",
-        icon: 'fa-key',
+        title: "HyperCX Vault",
         listHeader: "Backups",
         lockable: false,
         subheader: '<span>\
-            <span class="total_acl"/> <small>'+Locale.tr("TOTAL")+'</small>\
+            <span class="total_vault"/> <small>'+Locale.tr("TOTAL")+'</small>\
         </span>',
-        resource: 'VaultBackups',
+        resource: 'Vault',
         buttons: Buttons,
         actions: Actions,
         dataTable: new Table(DATATABLE_ID, {actions: true, info: false}),
