@@ -930,4 +930,12 @@ tabs:
            VMGroup.unlock: true
     hypercx-tab:
         panel_tabs:
+        table_columns:
+            - 0         # VMID
+            - 1         # DATE
+            - 2         # STATUS
+            - 3         # MP_ID
+            - 4
+            - 5
         actions:
+            vault.refresh: true
