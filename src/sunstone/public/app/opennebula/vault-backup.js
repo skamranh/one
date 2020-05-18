@@ -1,5 +1,3 @@
-
-
 define(function(require) {
   
   var opennebula = require("opennebula");
@@ -10,11 +8,11 @@ define(function(require) {
     "list" : function(params, RESOURCE) {
       var callback = params.success;
       var _table_dat;
-      $.ajax('/hypercx',
+      $.ajax('/hypercx/vault-backup',
                 {            
                     async: false,
                     success: function (data, status, xhr) {
-                            return callback? callback('/hypercx', data): null
+                            return callback? callback('/hypercx/vault-backup', data): null
                     }
                 });
     },

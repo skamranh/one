@@ -1,5 +1,5 @@
 define(function(require){
     
-    return "hypercx-tab";
+    return "vault-backup-tab";
 
 });

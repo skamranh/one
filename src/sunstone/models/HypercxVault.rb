@@ -10,6 +10,37 @@ class HypercxVault
         @apps = Array.new
     end
 
+    def getAllInfo
+        return Array.new unless File.exist?(CONFIG_FILE_PATH)
+        conf = YAML::load_file(CONFIG_FILE_PATH)
+        return Array[
+                        Hash[
+                            "NAME" => "Service running?" , 
+                            "DESC" => "RUNNING"
+                        ], 
+                        Hash[
+                            "NAME" => "Backup TAG Name" , 
+                            "DESC" => conf["backups_tag_name"]
+                        ], 
+                        Hash[
+                            "NAME" => "Notify Zabbix Server" ,
+                            "DESC" => conf["notify_zabbix_server"]
+                        ], 
+                        Hash[
+                            "NAME" => "Notify Zabbix Proxy" , 
+                            "DESC" => conf["notify_zabbix_proxy"]
+                        ], 
+                        Hash[
+                            "NAME" => "Backup Limit(Count)" , 
+                            "DESC" => conf["backup_count_limit"]
+                        ], 
+                        Hash[
+                            "NAME" => "Backup Rotation Period(Days)" , 
+                            "DESC" => conf["rotation_period"]
+                            ]
+                    ]
+    end
+
     def getAllApps
         self.refresh
         self.backups_sort
@@ -49,7 +80,7 @@ class HypercxVault
         @client = Client.new
         mpapppool = MarketPlaceAppPool.new(@client, -1)
         rc = mpapppool.info
-        unless OpenNebula.is_error?(rc) && File.exist?(CONFIG_FILE_PATH)
+        if !(OpenNebula.is_error?(rc)) && File.exist?(CONFIG_FILE_PATH)
             mp_id = YAML::load_file(CONFIG_FILE_PATH)['marketplace']['id']
             mpapppool.each do |mpapp|
                 if mpapp.to_hash && mpapp.to_hash['MARKETPLACEAPP']['MARKETPLACE_ID'].to_i == mp_id

@@ -21,8 +21,9 @@ define(function(require) {
         this.dataTableOptions = {
             "bSortClasses" : false,
             "bDeferRender": true,
+            "order": [[ 1, "desc" ]],
             "aoColumnDefs": [
-                { "bSortable": false, "aTargets": ["check",2,3,4,5] },
+                { "bSortable": false, "aTargets": ["check",2,3,4] },
                 {"sWidth": "35px", "aTargets": [0]},
                 {"bVisible": true, "aTargets": SunstoneConfig.tabTableColumns(TAB_NAME)},
                 {"bVisible": false, "aTargets": ['_all']},
@@ -34,7 +35,6 @@ define(function(require) {
     
     this.columns = [
         "VM Name",
-        "VM ID",
         "Backup Date",
         "Status",
         "Marketplace ID"
@@ -67,21 +67,21 @@ define(function(require) {
                                 'style="vertical-align: inherit;" id="'+this.resource.toLowerCase()+'_' +
                                  element_json.MPID + '" name="selected_items" value="' +
                                  element_json.MPID + '"/>',
-            element_json.NAME,
-            element_json.VMID,
-            element_json.DATE,
+            '<a href="/#vms-tab/'+element_json.VMID+'">'+element_json.NAME+'</a>',
+            new Date(parseInt(element_json.DATE)*1000).toISOString().slice(0,-5),
             element_json.STATUS,
-            element_json.MPID,
-            element_json
+            '<a href="/#marketplaceapps-tab/'+element_json.MPID+'">'+element_json.MPID+'</a>',
+            ''
           ];
     }
     
     function _preUpdateView() {
-        this.totalACLs = 0;
+        this.totalBups = 0;
+        $(".total_vault").text(this.totalBups);
     }
 
     function _postUpdateView() {
-        $(".total_Vault").text(this.totalBups);
+        $(".total_vault").text(this.totalBups);
     }
     
 });

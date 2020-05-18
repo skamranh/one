@@ -2,7 +2,7 @@
 define(function(require) {
     
     var Buttons = {
-        "Vault.refresh" : {
+        "vault-info.refresh" : {
             type: "action",
             layout: "refresh",
             alwaysActive: true

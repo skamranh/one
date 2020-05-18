@@ -928,6 +928,28 @@ tabs:
            VMGroup.chgrp: true
            VMGroup.lockU: true
            VMGroup.unlock: true
-    hypercx-tab:
+           
+    vault-top-tab:
         panel_tabs:
         actions:
+        
+    vault-info-tab:
+        panel_tabs:
+        table_columns:
+            - 0         # VMID
+            - 1         # DATE
+            - 2         # STATUS
+        actions:
+            vault-info.refresh: true
+
+    vault-backup-tab:
+        panel_tabs:
+        table_columns:
+            - 0         # VMID
+            - 1         # DATE
+            - 2         # STATUS
+            - 3         # MP_ID
+            - 4
+            - 5
+        actions:
+            vault-backup.refresh: true
