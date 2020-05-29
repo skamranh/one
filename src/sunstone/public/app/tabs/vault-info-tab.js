@@ -2,35 +2,36 @@
 define(function(require) {
 
     TAB_ID = require('./vault-info-tab/tabId');
-    var Buttons = require('./vault-info-tab/button');
-    var Actions = require('./vault-info-tab/action');
-    //var TemplatePool = require('hbs!./hypercx-tab/html');
-    var Table = require('./vault-info-tab/datatable');
-    var DATATABLE_ID = "vault-info";
-    
-    var _dialogs = [
-    ];
-
-    var _panels = [
-    ];
-    
+    OPENNEBULA = require('opennebula');
+    var HtmlTemplate = require('hbs!./vault-info-tab/html');
+    var _table_dat;
+    $.ajax('/hypercx/vault-info',
+                {            
+                    async: false,
+                    success: function (data, status, xhr) {
+                        _table_dat = data;
+                    }
+                });
+    var _status = _table_dat.map(function (table) { return table.NAME; }).indexOf("Service running?")
+    if(_status != -1 && _table_dat[_status]["DESC"]){
+        _status = true;
+    }
+    else{
+        
+        _status = false;
+    }
     var Tab = {
         tabId: TAB_ID,
         title: "Info",
         icon: 'fa-key',
         tabClass: "subTab",
         parentTab: "vault-top-tab",
-        listHeader: "Backups",
+        listHeader: "HyperCX Vault Status",
         lockable: false,
-        subheader: '<span>\
-            <span class="total_vault_info"/> <small>Total</small>\
-        </span>',
-        resource: 'vault-info',
-        buttons: Buttons,
-        actions: Actions,
-        dataTable: new Table(DATATABLE_ID, {actions: true, info: false}),
-        panels: _panels,
-        dialogs: _dialogs
+        content: HtmlTemplate({
+            table_dat: _table_dat,
+            isEnabled_Vault: true
+        })
     };
 
     return Tab;

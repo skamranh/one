@@ -1,0 +1,39 @@
+
+<div class="row">
+  <div class="large-6 columns">
+    <table id="info_vault_table" class="dataTable">
+      <thead>
+        <tr>
+          <th colspan="3">Information</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each table_dat}}
+        <tr>
+          <td class="key_td">{{this.NAME}}</td>
+          <td class="value_td">{{this.DESC}}</td>
+          <td></td>
+        </tr>
+        {{/each}}
+      <tbody>
+    </table>
+  </div>
+  <div class="large-6 columns">
+    <table id="info_vault_table" class="dataTable">
+      <thead>
+        <tr>
+          <th colspan="3">Service Enabled?</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          {{#if isEnabled_Vault}}
+            <span style='font-size:2em;'>&#9989;</span>
+          {{/if}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
