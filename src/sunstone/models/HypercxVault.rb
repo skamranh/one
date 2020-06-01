@@ -6,17 +6,110 @@ include OpenNebula
 class HypercxVault
     def initialize
         @client = Client.new
-        @read_lines = 0
         @apps = Array.new
     end
 
-    def getAllInfo
-        return Array.new unless File.exist?(CONFIG_FILE_PATH)
+    def getcurrbackups
+        _currbackup = ""
+        _previousbackup = ""
+        _inprogress = false
+        begin
+            if File.exist?(LOG_FILE_PATH)
+              file = File.open(LOG_FILE_PATH)
+              current_read = 0
+              while(val= file.gets)
+                if val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOSOB'
+                    _currbackup = self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0])
+                    _inprogress = true
+                elsif val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOPOB'
+                    _currbackup = self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0])
+                    _inprogress = true
+                elsif val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOTOB'
+                    _currbackup = ""
+                    _inprogress = false
+                elsif val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOEOS'
+                    _currbackup = ""
+                    _inprogress = false
+                end
+              end
+            end
+        rescue SystemCallError => e
+            puts "Rescued: #{e.inspect}"
+        end
+
+
+        _dat = Array.new
+        _dat.push(Hash[
+            "NAME" => "In Progress?",
+            "DESC" => "Yes"
+                ]) if _inprogress
+        _dat.push(Hash[
+            "NAME" => "In Progress?",
+            "DESC" => "No"
+                ]) if !_inprogress
+        _dat.push(Hash[
+            "NAME" => "Backup in progress of",
+            "DESC" => _currbackup
+                ]) unless _currbackup == ""
+        _dat.push(Hash[
+            "NAME" => "Previously backed up",
+            "DESC" => _previousbackup
+                ]) unless _previousbackup == ""
+        
+        return _dat
+    end
+
+    def get_backup_schedule
+        _schedule_arr = Array.new
         conf = YAML::load_file(CONFIG_FILE_PATH)
-        return Array[
+        conf['day_of_week'].each do |week|
+            _day = ""
+            case week
+            when 0
+                _day = "Sunday"
+            when 1
+                _day = "Monday"
+            when 2
+                _day = "Tueday"
+            when 3
+                _day = "Wednesday"
+            when 4
+                _day = "Thursday"
+            when 5
+                _day = "Friday"
+            when 6
+                _day = "Saturday"
+            else
+                _day = "(ERROR)"
+            end
+            conf['time'].each do |time|
+                _schedule_arr.push(Hash[
+                    "DAY" => _day,
+                    "TIME" => time
+                ])
+            end
+        end
+        return _schedule_arr
+    end
+
+    def checkservice
+        rc = system("systemctl is-active --quiet hypercx-vault")
+        if (rc)
+            return true
+        end
+        return false
+    end
+
+    def getAllInfo
+        return Array.new unless(File.exist?(CONFIG_FILE_PATH) || File.exist?(LOG_FILE_PATH))
+
+        conf = YAML::load_file(CONFIG_FILE_PATH)
+
+        return Hash[
+                    "info" => Array[
                         Hash[
                             "NAME" => "Service running?" , 
-                            "DESC" => "RUNNING"
+                            "DESC" => checkservice
                         ], 
                         Hash[
                             "NAME" => "Backup TAG Name" , 
@@ -38,10 +131,14 @@ class HypercxVault
                             "NAME" => "Backup Rotation Period(Days)" , 
                             "DESC" => conf["rotation_period"]
                             ]
-                    ]
+                    ],
+                    "BACKUPS_IN_PROGRESS" => self.getcurrbackups,
+                    "BACKUPS_SCHEDULE" => get_backup_schedule
+                ]
     end
 
     def getAllApps
+        @apps = Array.new
         self.refresh
         self.backups_sort
         return @apps
@@ -55,26 +152,34 @@ class HypercxVault
         else
             return vm.to_hash["VM"]["NAME"]
         end
-
     end
+    
     def refresh
-        if File.exist?(LOG_FILE_PATH)
-            begin
-                file = File.open(LOG_FILE_PATH)
-                current_read = 0
-                while(val= file.gets)
-                    if(++current_read >= @read_lines)
-                        current_read += 1
-                        if val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOEOB'
-                            @apps.push(Hash["NAME" => self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0]) , 'STATUS' => 'FAILED', 'DISK' => val.split("!")[2].split(" ")[1].split("_")[1], 'MPID'=>  "-",'DATE' => val.split("!")[2].split(" ")[1].split("_").last, "VMID" => val.split("!")[2].split(" ")[1].split("_")[0]])
-                        end
-                    end
+        begin
+            if File.exist?(LOG_FILE_PATH)
+              file = File.open(LOG_FILE_PATH)
+              current_read = 0
+              while(val= file.gets)
+                  if val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOEOB'
+                      @apps.push(Hash["NAME" => self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0]) , 'STATUS' => 'FAILED', 'DISK' => val.split("!")[2].split(" ")[1].split("_")[1], 'MPID'=>  "-",'DATE' => val.split("!")[2].split(" ")[1].split("_").last, "VMID" => val.split("!")[2].split(" ")[1].split("_")[0]])
+                  end
+              end
+              for i in 0..3
+                if File.exist?(LOG_FILE_PATH + ".#{i}")
+                  file = File.open(LOG_FILE_PATH + ".#{i}")
+                  current_read = 0
+                  while(val= file.gets)
+                      if val.split("!")[2].kind_of?(String) && val.split("!")[2].split(" ")[0] == 'IOEOB'
+                          @apps.push(Hash["NAME" => self.get_vm_name(val.split("!")[2].split(" ")[1].split("_")[0]) , 'STATUS' => 'FAILED', 'DISK' => val.split("!")[2].split(" ")[1].split("_")[1], 'MPID'=>  "-",'DATE' => val.split("!")[2].split(" ")[1].split("_").last, "VMID" => val.split("!")[2].split(" ")[1].split("_")[0]])
+                      end
+                  end
                 end
-                @read_lines = current_read unless current_read == 0
-            rescue Exception => e
-
+              end
             end
+        rescue SystemCallError => e
+            puts "Rescued: #{e.inspect}"
         end
+
         @apps.delete_if{|x| x["STATUS"] == "SUCCESS"}
         
         @client = Client.new
@@ -104,4 +209,4 @@ class HypercxVault
           end
         @apps
       end
-end
+end 
