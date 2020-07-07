@@ -126,7 +126,6 @@ require.config({
         "tabs/groups-tab",
         "tabs/vdcs-tab",
         "tabs/acls-tab",
-        "tabs/vault-top-tab",
         "tabs/vault-info-tab",
         "tabs/vault-backup-tab",
         "tabs/templates-top-tab",

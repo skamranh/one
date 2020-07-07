@@ -4,7 +4,6 @@ define(function(require) {
     TAB_ID = require('./vault-backup-tab/tabId');
     var Buttons = require('./vault-backup-tab/button');
     var Actions = require('./vault-backup-tab/action');
-    //var TemplatePool = require('hbs!./hypercx-tab/html');
     var Table = require('./vault-backup-tab/datatable');
     var DATATABLE_ID = "vault-backup";
     
@@ -19,7 +18,7 @@ define(function(require) {
         title: "HyperCX Vault",
         icon: 'fa-key',
         tabClass: "subTab",
-        parentTab: "vault-top-tab",
+        parentTab: "vault-info-tab",
         listHeader: "Backups",
         lockable: false,
         subheader: '<span>\

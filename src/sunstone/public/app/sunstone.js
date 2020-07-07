@@ -40,7 +40,6 @@ define(function(require) {
     "groups-tab",
     "vdcs-tab",
     "acls-tab",
-    "vault-top-tab",
     "vault-info-tab",
     "vault-backup-tab",
     "templates-top-tab",

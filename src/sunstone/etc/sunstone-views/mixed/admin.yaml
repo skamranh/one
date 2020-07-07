@@ -18,6 +18,8 @@ enabled_tabs:
     - storage-top-tab
     - datastores-tab
     - images-tab
+    - vault-info-tab
+    - vault-backup-tab
     #- files-tab
     - marketplaces-tab
     - marketplaceapps-tab
@@ -928,11 +930,7 @@ tabs:
            VMGroup.chgrp: true
            VMGroup.lockU: true
            VMGroup.unlock: true
-           
-    vault-top-tab:
-        panel_tabs:
-        actions:
-        
+                   
     vault-info-tab:
         panel_tabs:
         table_columns:
@@ -940,8 +938,7 @@ tabs:
             - 1         # DATE
             - 2         # STATUS
         actions:
-            vault-info.refresh: true
-
+        
     vault-backup-tab:
         panel_tabs:
         table_columns:

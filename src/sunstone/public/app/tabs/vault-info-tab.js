@@ -3,11 +3,6 @@ define(function(require) {
 
     TAB_ID = require('./vault-info-tab/tabId');
     OPENNEBULA = require('opennebula')
-    //var Buttons = require('./vault-info-tab/button');
-    //var Actions = require('./vault-info-tab/action');
-    //var TemplatePool = require('hbs!./hypercx-tab/html');
-    //var Table = require('./vault-info-tab/datatable');
-    //var DATATABLE_ID = "vault-info";
     var HtmlTemplate = require('hbs!./vault-info-tab/html');
     var _table_dat;
     $.ajax('/hypercx/vault-info',
@@ -32,10 +27,10 @@ define(function(require) {
     }
     var Tab = {
     tabId: TAB_ID,
-    title: "Info",
+    title: "HyperCX Vault",
     icon: 'fa-key',
     tabClass: "subTab",
-    parentTab: "vault-top-tab",
+    parentTab: "storage-top-tab",
     listHeader: "HyperCX Vault Status",
     lockable: false,
     content: HtmlTemplate({
